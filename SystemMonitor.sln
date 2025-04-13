@@ -4,6 +4,10 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SystemMonitor.Host", "Syste
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SystemMonitor.Core", "SystemMonitor.Core\SystemMonitor.Core.csproj", "{A034404C-9C2E-4BE1-92C3-4EC01902FCAF}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SystemMonitor.FileLogerPlugin", "SystemMonitor.FileLogerPlugin\SystemMonitor.FileLogerPlugin.csproj", "{18C2BA73-20F3-4A28-8AEB-DBE0A13AC839}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SystemMonitor.Host.Test", "SystemMonitor.Host.Test\SystemMonitor.Host.Test.csproj", "{18048E7F-A49F-426A-B5F3-C3C06D1C67B1}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -18,5 +22,13 @@ Global
 		{A034404C-9C2E-4BE1-92C3-4EC01902FCAF}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{A034404C-9C2E-4BE1-92C3-4EC01902FCAF}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{A034404C-9C2E-4BE1-92C3-4EC01902FCAF}.Release|Any CPU.Build.0 = Release|Any CPU
+		{18C2BA73-20F3-4A28-8AEB-DBE0A13AC839}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{18C2BA73-20F3-4A28-8AEB-DBE0A13AC839}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{18C2BA73-20F3-4A28-8AEB-DBE0A13AC839}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{18C2BA73-20F3-4A28-8AEB-DBE0A13AC839}.Release|Any CPU.Build.0 = Release|Any CPU
+		{18048E7F-A49F-426A-B5F3-C3C06D1C67B1}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{18048E7F-A49F-426A-B5F3-C3C06D1C67B1}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{18048E7F-A49F-426A-B5F3-C3C06D1C67B1}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{18048E7F-A49F-426A-B5F3-C3C06D1C67B1}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal

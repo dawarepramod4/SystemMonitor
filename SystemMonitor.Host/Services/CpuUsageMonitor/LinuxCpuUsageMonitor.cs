@@ -25,22 +25,28 @@ public class LinuxCpuUsageMonitor :ICpuUsageMonitor
     /// <returns></returns>
     async Task<double> GetCpuUsagePercentage(int intervalMs)
     {
+        //cpu stats start
         var cpu1 = ReadCpuStats();
         await Task.Delay(intervalMs);
+        //cpu stats end
         var cpu2 = ReadCpuStats();
 
+        //stats before monitor started
         var total1 = cpu1.total;
         var idle1 = cpu1.idle;
 
+        //stats after monitos started
         var total2 = cpu2.total;
         var idle2 = cpu2.idle;
 
         var totalDiff = total2 - total1;
         var idleDiff = idle2 - idle1;
 
+        //In case of interval is 0 the usage assumed to be near zero
         if (totalDiff == 0)
             return 0;
 
+        //we need percentage
         return 100.0 * (totalDiff - idleDiff) / totalDiff;
     }
     

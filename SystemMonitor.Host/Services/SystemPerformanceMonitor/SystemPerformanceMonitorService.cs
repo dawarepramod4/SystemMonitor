@@ -1,12 +1,14 @@
 using System.Diagnostics;
 using SystemMonitor.Core.Models;
+using SystemMonitor.Models;
 using SystemMonitor.Services.CpuUsageMonitor;
 
 namespace SystemMonitor.Services.SystemPerformanceMonitor;
+
 /// <summary>
 /// Service to monitor performance of the current operating system
 /// </summary>
-public class SystemPerformanceMonitorService(ICpuUsageMonitor cpuUsageMonitor)
+public class SystemPerformanceMonitorService(CpuUsageMonitorResolver cpuUsageMonitorResolver)
 {
     /// <summary>
     /// Retrieves the performance stats at the moment.
@@ -14,15 +16,27 @@ public class SystemPerformanceMonitorService(ICpuUsageMonitor cpuUsageMonitor)
     /// <returns>Monitored Data from the system</returns>
     public async Task<MonitorDataDto> GetPerformanceStats(int intervalMs)
     {
-        var cpuPercent = await cpuUsageMonitor.GetCpuUsageAsync(intervalMs);
+        var cpuUsage = await GetCpuUsageAsync(intervalMs);
 
         return new MonitorDataDto()
         {
-            CpuUsagePercentage = cpuPercent.UsagePercent,
+            CpuUsagePercentage = cpuUsage.UsagePercent,
             MemoryUsage = GetMemoryUsage(),
             DiskUsage = GetDiskUsage()
         };
+    }
 
+    /// <summary>
+    /// Returns Cpu Usae
+    /// </summary>
+    /// <param name="intervalMs"></param>
+    /// <returns></returns>
+    /// <exception cref="InvalidOperationException"></exception>
+    private async Task<CpuUsageDto> GetCpuUsageAsync(int intervalMs)
+    {
+        //get the correct service
+        ICpuUsageMonitor? cpuUsageMonitor = cpuUsageMonitorResolver.ResolveCpuUsageMonitor();
+        return await cpuUsageMonitor.GetCpuUsageAsync(intervalMs);
     }
 
 
