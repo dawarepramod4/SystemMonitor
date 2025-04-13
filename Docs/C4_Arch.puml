@@ -1,0 +1,32 @@
+@startuml
+
+!include <C4/C4_Container>
+
+System(OS, "Operating System", "Host operating system")
+
+System_Boundary(c1,"Server"){
+System_Boundary(c2,"Host Console application"){
+Container(host,"SystemMonitor.Host","C# .Net","Host Console application")
+}
+Container(core,"SystemMonitor.Core","C# .Net","")
+Container(logger, "SystemMonitorLoggerPlugin","C# .Net","Plugin which can extend the functionality of the host")
+Container(plugin1,"Plugin1","C# .Net","Plugin")
+Container(plugin2,"Plugin 2","C# .Net","Plugin")
+Container(plugin3,"plugin 3","C# .Net","Plugin")
+}
+
+Rel(OS, host, "Feeds Data", "Interaction")
+Rel(host,core,"Use Core Library","Uses")
+Rel(logger,core,"Use Core Classes (IMonitor)","Uses")
+
+Rel(plugin1,core,"Run Actions based on Plugin")
+Rel(plugin2,core,"Run Actions based int Plugin")
+Rel(plugin3,core,"Run Actions based int Plugin")
+
+Rel(host, logger,"Plugin 1")
+Rel(host, plugin1,"Plugin 2")
+Rel(host, plugin2,"plugin 3")
+Rel(host, plugin3,"plugin 4")
+
+
+@enduml
