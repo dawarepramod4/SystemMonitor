@@ -15,17 +15,14 @@ public class FileLoggerService
     /// <param name="monitorDataDto">Monitored data to be logged in a file</param>
     public void LogMonitoredDataToFile(MonitorDataDto monitorDataDto)
     {
-        var logFilePath = "log.txt";
 
-        //create file if the file does not exist.
-        if (!File.Exists(logFilePath))
-        {
-            Console.WriteLine($"Log file doesn't exist: {logFilePath}, creating...");
-            File.Create(logFilePath).Close();
-        }
+        //get path 
+        var logFilePath = GetOutputDirectoryFilePath();
+
+        //need string lines to write to a file
+        var linesToLog = GenerateLoggingMessageList(monitorDataDto);
 
         //log all the lines to file.
-        var linesToLog = GenerateLoggingMessageList(monitorDataDto);
         File.AppendAllLines(logFilePath, linesToLog);
     }
 
@@ -71,11 +68,35 @@ public class FileLoggerService
     /// <param name="used">used Portion of the Memory</param>
     /// <param name="total">Total Memory Availabe</param>
     /// <returns></returns>
-    public string GetUserReadablyMemoryUsageMsg(long used, long total)
+    private string GetUserReadablyMemoryUsageMsg(long used, long total)
     {
         string usedMemoryString = MemoryConversionUtility.ConvertIntegerBytesToUserReadableString(used);
         string totalMemoryString = MemoryConversionUtility.ConvertIntegerBytesToUserReadableString(total);
         return usedMemoryString + '/' + totalMemoryString;
+    }
+
+
+    /// <summary>
+    /// Creates a Directory For Output Log File
+    /// </summary>
+    /// <returns></returns>
+    private string GetOutputDirectoryFilePath()
+    {
+        var outDirPath = Path.Combine(AppContext.BaseDirectory, "Output");
+        var logFilePath = Path.Combine(outDirPath, "log.txt");
+
+        //make sure directory exists for output
+        Directory.CreateDirectory(outDirPath);
+
+        //create file if the file does not exist.
+        if (!File.Exists(logFilePath))
+        {
+            Console.WriteLine($"Log file doesn't exist: {logFilePath}, creating...");
+            File.Create(logFilePath).Close();
+        }
+
+        return logFilePath;
+
     }
 
 
