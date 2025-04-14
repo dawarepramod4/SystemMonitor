@@ -14,7 +14,7 @@ public class SystemPerformanceMonitorService(CpuUsageMonitorResolver cpuUsageMon
     /// Retrieves the performance stats at the moment.
     /// </summary>
     /// <returns>Monitored Data from the system</returns>
-    public async Task<MonitorDataDto> GetPerformanceStats(int intervalMs)
+    public async Task<MonitorDataDto> GetPerformanceStatsAsync(int intervalMs)
     {
         var cpuUsage = await GetCpuUsageAsync(intervalMs);
 

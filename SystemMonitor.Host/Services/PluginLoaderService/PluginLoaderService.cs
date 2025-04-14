@@ -10,7 +10,7 @@ public class PluginLoaderService()
         try
         {
             //get the current directory which will be /bin from generated ILCode
-            var binDir = Environment.CurrentDirectory;
+            var binDir =Path.Combine(AppContext.BaseDirectory,"Plugins");
             
             //need to read all the dlls for assembly
             var files = Directory.GetFiles(binDir, "*.dll").ToList();
@@ -60,9 +60,5 @@ public class PluginLoaderService()
         }
 
         if (count != 0) yield break;
-        
-        //In case no monitor Plugin found need to throw exception
-        var availableTypes = string.Join(",", assembly.GetTypes().Select(t => t.FullName));
-        throw new InvalidOperationException($"Cannot create commands for {availableTypes}");
     }
 }

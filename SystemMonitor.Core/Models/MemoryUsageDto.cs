@@ -2,6 +2,6 @@ namespace SystemMonitor.Core.Models;
 
 public class MemoryUsageDto
 {
-    public double MemoryUsed { get; set; }
-    public double MemoryTotal { get; set; }
+    public long MemoryUsed { get; set; }
+    public long MemoryTotal { get; set; }
 }

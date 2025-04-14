@@ -1,6 +1,8 @@
-﻿// See https://aka.ms/new-console-template for more information
-
+﻿using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using System.Threading.Channels;
+using SystemMonitor.Core;
+using SystemMonitor.Core.Models;
 using SystemMonitor.Models;
 using SystemMonitor.Services.CpuUsageMonitor;
 using SystemMonitor.Services.OperatingSystemDetectionService;
@@ -13,38 +15,59 @@ class Program
 {
     static async Task Main(string[] args)
     {
+        // Load configuration from appsettings.json
+        var configuration = new ConfigurationBuilder()
+            .SetBasePath(AppContext.BaseDirectory) // ensures correct runtime path
+            .AddJsonFile("appsettings.json", optional: false, reloadOnChange: true)
+            .Build();
+
+        // Setup DI container
         var serviceProvider = new ServiceCollection()
+            .AddSingleton<IConfiguration>(configuration) // inject configuration!
             .AddSingleton<PluginLoaderService>()
             .AddSingleton<OperatingSystemDetectionService>()
             .AddSingleton<CpuUsageMonitorResolver>()
-            .AddKeyedSingleton<ICpuUsageMonitor, LinuxCpuUsageMonitor>(OperatingSystemType.Windows)
-            .AddKeyedSingleton<ICpuUsageMonitor, LinuxCpuUsageMonitor>(OperatingSystemType.MacOsx)
-            .AddKeyedSingleton<ICpuUsageMonitor, WindowsCpuUsageMonitor>(OperatingSystemType.Linux)
+            .AddKeyedSingleton<ICpuUsageMonitor, WindowsCpuUsageMonitor>(OperatingSystemType.Windows)
+            .AddKeyedSingleton<ICpuUsageMonitor, LinuxCpuUsageMonitor>(OperatingSystemType.Linux)
+            .AddSingleton<SystemPerformanceMonitorService>()
+            .AddTransient<SystemPerformanceDataProducer>()
             .BuildServiceProvider();
+
         using var scope = serviceProvider.CreateScope();
 
-        //get the arguments
+        // Get CLI arguments
         var pluginToRun = args[0];
         var intervalMs = int.Parse(args[1]);
 
-        //we need to find the plugin with name sent from cli
+        // Load the plugin
         var pluginLoader = scope.ServiceProvider.GetRequiredService<PluginLoaderService>();
-        
         var plugins = pluginLoader.GetAllPluginsFromAssembly();
         var currentPlugin = plugins.FirstOrDefault(plugin => plugin.Name.Equals(pluginToRun));
-        
+
         if (currentPlugin == null)
         {
             Console.WriteLine("Could not load plugin: " + pluginToRun);
             return;
         }
 
-        //running the plugin with interval of provided milliseconds
-        var performanceMonitor = scope.ServiceProvider.GetRequiredService<SystemPerformanceMonitorService>();
-        while (true)
+        // OPTIONAL: Pass config to plugin if needed
+        if (currentPlugin is IConfigurablePlugin configurable)
         {
-            var monitorDataDto = await performanceMonitor.GetPerformanceStats(intervalMs);
-            await currentPlugin.InvokeAsync(monitorDataDto);
+            var pluginSection = configuration.GetSection($"PluginSettings:{currentPlugin.Name}");
+            configurable.Configure(pluginSection);
         }
+
+        #region Producer-Consumer
+
+        var cts = new CancellationTokenSource();
+        Channel<MonitorDataDto> monitorDataChannel = Channel.CreateUnbounded<MonitorDataDto>();
+
+        var performanceDataProducerService = scope.ServiceProvider.GetRequiredService<SystemPerformanceDataProducer>();
+        var producer = performanceDataProducerService.ProduceSystemMonitoredData(monitorDataChannel, intervalMs, cts.Token);
+        var consumer = currentPlugin.InvokeAsync(monitorDataChannel);
+
+        await Task.WhenAll(producer, consumer);
+
+        #endregion
     }
 }

@@ -1,19 +1,31 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
-    <PropertyGroup>
-        <OutputType>Exe</OutputType>
-        <TargetFramework>net8.0</TargetFramework>
-        <ImplicitUsings>enable</ImplicitUsings>
-        <Nullable>enable</Nullable>
-        <RootNamespace>SystemMonitor</RootNamespace>
-    </PropertyGroup>
+	<PropertyGroup>
+		<OutputType>Exe</OutputType>
+		<TargetFramework>net8.0</TargetFramework>
+		<ImplicitUsings>enable</ImplicitUsings>
+		<Nullable>enable</Nullable>
+		<RootNamespace>SystemMonitor</RootNamespace>
+	</PropertyGroup>
 
-    <ItemGroup>
-      <ProjectReference Include="..\SystemMonitor.Core\SystemMonitor.Core.csproj" />
-    </ItemGroup>
+	<ItemGroup>
+		<ProjectReference Include="..\SystemMonitor.Core\SystemMonitor.Core.csproj" />
+	</ItemGroup>
 
-    <ItemGroup>
-      <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="10.0.0-preview.3.25171.5" />
-    </ItemGroup>
+	<ItemGroup>
+		<PackageReference Include="Microsoft.Extensions.Configuration" Version="9.0.4" />
+		<PackageReference Include="Microsoft.Extensions.Configuration.Binder" Version="9.0.4" />
+		<PackageReference Include="Microsoft.Extensions.Configuration.FileExtensions" Version="9.0.4" />
+		<PackageReference Include="Microsoft.Extensions.Configuration.Json" Version="9.0.4" />
+		<PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="10.0.0-preview.3.25171.5" />
+		<PackageReference Include="Microsoft.Extensions.Logging.Configuration" Version="9.0.4" />
+		<PackageReference Include="System.Diagnostics.PerformanceCounter" Version="9.0.4" />
+	</ItemGroup>
+
+	<ItemGroup>
+		<None Update="appsettings.json">
+			<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+		</None>
+	</ItemGroup>
 
 </Project>

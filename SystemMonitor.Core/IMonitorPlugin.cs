@@ -1,3 +1,4 @@
+using System.Threading.Channels;
 using SystemMonitor.Core.Models;
 
 namespace SystemMonitor.Core;
@@ -7,14 +8,14 @@ namespace SystemMonitor.Core;
 /// </summary>
 public interface IMonitorPlugin
 {
-    string Name { get; set; }
-    string Description { get; set; }
+    public string Name { get; set; }
+    public string Description { get; set; }
 
     /// <summary>
     /// Invoke method to run the Plugin functionality
     /// </summary>
     /// <param name="monitoredData">data monitored from the system</param>
     /// <returns></returns>
-    public Task InvokeAsync(MonitorDataDto monitoredData);
+    public Task InvokeAsync(Channel<MonitorDataDto> monitorDataChannel);
 
 }

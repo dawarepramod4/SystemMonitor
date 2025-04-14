@@ -1,0 +1,8 @@
+{
+  "profiles": {
+    "SystemMonitor.Host": {
+      "commandName": "Project",
+      "commandLineArgs": "logtoapi 2000"
+    }
+  }
+}

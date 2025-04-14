@@ -4,8 +4,9 @@ namespace SystemMonitor.Core.Models;
 /// Data Transfer Object for Monitored Data
 /// </summary>
 public class MonitorDataDto
-{ 
-   public double CpuUsagePercentage { get; set; }
-   public MemoryUsageDto? MemoryUsage { get; set; }
-   public List<DiskUsageDto> DiskUsage { get; set; } = [];
+{
+    public DateTime DateTime { get; set; } = DateTime.Now;
+    public double CpuUsagePercentage { get; set; }
+    public required MemoryUsageDto MemoryUsage { get; set; }
+    public List<DiskUsageDto> DiskUsage { get; set; } = [];
 }
