@@ -29,7 +29,7 @@ Plugins can be inserted dynamically to the application.
 
 
 ### How to Run:
-1. Extract the link.
+1. Extract the [Downloaded Setup](https://github.com/dawarepramod4/SystemMonitor/blob/master/SystemMonitor.zip).
 2. Open the folder in terminal and run following command:
 ```.\SystemMonitor.Host logtofile 2000```
 
